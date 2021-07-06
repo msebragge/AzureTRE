@@ -63,6 +63,8 @@ resource "azurerm_firewall_application_rule_collection" "apprulecollection" {
   priority            = data.external.rule_priorities.result.application_rule_priority
   action              = "Allow"
 
+  lifecycle { ignore_changes = [ tags ] }
+
   rule {
     name = "allowMLrelated"
 

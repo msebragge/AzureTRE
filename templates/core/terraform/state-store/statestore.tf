@@ -26,8 +26,6 @@ resource "azurerm_cosmosdb_sql_database" "tre-db" {
   resource_group_name = var.resource_group_name
   account_name        = azurerm_cosmosdb_account.tre-db-account.name
   throughput          = 400
-
-  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_private_dns_zone" "cosmos" {

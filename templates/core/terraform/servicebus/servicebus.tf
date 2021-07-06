@@ -14,8 +14,6 @@ resource "azurerm_servicebus_queue" "workspacequeue" {
   namespace_name      = azurerm_servicebus_namespace.sb.name
 
   enable_partitioning = false
-
-  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_servicebus_queue" "service_bus_deployment_status_update_queue" {
@@ -24,8 +22,6 @@ resource "azurerm_servicebus_queue" "service_bus_deployment_status_update_queue"
   namespace_name      = azurerm_servicebus_namespace.sb.name
 
   enable_partitioning = false
-
-  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_private_dns_zone" "servicebus" {

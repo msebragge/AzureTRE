@@ -12,8 +12,6 @@ resource "azurerm_storage_share" "storage_state_path" {
   name                 = "cnab-state"
   storage_account_name = azurerm_storage_account.stg.name
   quota                = 50
-
-  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_private_dns_zone" "blobcore" {

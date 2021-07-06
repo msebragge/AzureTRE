@@ -5,6 +5,8 @@ resource "azurerm_app_service_plan" "core" {
   reserved            = true
   kind                = "linux"
 
+  lifecycle { ignore_changes = [ tags ] }
+
   sku {
     tier     = "PremiumV3"
     capacity = 1
@@ -47,6 +49,8 @@ resource "azurerm_app_service" "management_api" {
     type = "UserAssigned"
     identity_ids = [ var.managed_identity.id ]
   }
+
+  lifecycle { ignore_changes = [ tags ] }
 
   site_config {
     linux_fx_version            = "DOCKER|${var.docker_registry_server}/${var.management_api_image_repository}:${var.management_api_image_tag}"
@@ -92,6 +96,8 @@ resource "azurerm_private_endpoint" "management_api_private_endpoint" {
   location            = var.location
   subnet_id           = var.shared_subnet
 
+  lifecycle { ignore_changes = [ tags ] }
+
   private_service_connection {
     private_connection_resource_id = azurerm_app_service.management_api.id
     name                           = "psc-api-${var.tre_id}"
@@ -109,12 +115,16 @@ resource "azurerm_private_endpoint" "management_api_private_endpoint" {
 resource "azurerm_app_service_virtual_network_swift_connection" "api-integrated-vnet" {
   app_service_id = azurerm_app_service.management_api.id
   subnet_id      = var.web_app_subnet
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_monitor_diagnostic_setting" "webapp_management_api" {
   name                       = "diag-${var.tre_id}"
   target_resource_id         = azurerm_app_service.management_api.id
   log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  lifecycle { ignore_changes = [ tags ] }
 
   log {
     category = "AppServiceHTTPLogs"

@@ -10,6 +10,8 @@ resource "azurerm_key_vault_access_policy" "app_gw_managed_identity" {
   secret_permissions = [
     "Get",
   ]
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_key_vault_certificate" "tlscert" {

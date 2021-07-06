@@ -3,6 +3,8 @@ resource "azurerm_virtual_network" "core" {
   location            = var.location
   resource_group_name = var.resource_group_name
   address_space       = [var.address_space]
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_subnet" "bastion" {
@@ -10,6 +12,8 @@ resource "azurerm_subnet" "bastion" {
   virtual_network_name = azurerm_virtual_network.core.name
   resource_group_name  = var.resource_group_name
   address_prefixes     = [local.bastion_subnet_address_prefix]
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_subnet" "azure_firewall" {
@@ -17,6 +21,8 @@ resource "azurerm_subnet" "azure_firewall" {
   virtual_network_name = azurerm_virtual_network.core.name
   resource_group_name  = var.resource_group_name
   address_prefixes     = [local.firewall_subnet_address_space]
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_subnet" "app_gw" {
@@ -24,6 +30,8 @@ resource "azurerm_subnet" "app_gw" {
   virtual_network_name = azurerm_virtual_network.core.name
   resource_group_name  = var.resource_group_name
   address_prefixes     = [local.app_gw_subnet_address_prefix]
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_subnet" "web_app" {
@@ -42,6 +50,8 @@ resource "azurerm_subnet" "web_app" {
       actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
     }
   }
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_subnet" "aci" {
@@ -60,6 +70,8 @@ resource "azurerm_subnet" "aci" {
       actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
     }
   }
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_network_profile" "aciprofile" {
@@ -75,6 +87,8 @@ resource "azurerm_network_profile" "aciprofile" {
       subnet_id = azurerm_subnet.aci.id
     }
   }
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_subnet" "shared" {
@@ -84,4 +98,6 @@ resource "azurerm_subnet" "shared" {
   address_prefixes                               = [local.shared_services_subnet_address_prefix]
   # notice that private endpoints do not adhere to NSG rules
   enforce_private_link_endpoint_network_policies = true
+
+  lifecycle { ignore_changes = [ tags ] }
 }

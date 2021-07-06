@@ -38,6 +38,8 @@ resource "azurerm_firewall_network_rule_collection" "networkrulecollection" {
   priority            = data.external.rule_priorities.result.network_rule_priority
   action              = "Allow"
 
+  lifecycle { ignore_changes = [ tags ] }
+
   rule {
     name = "allowStorage"
 
@@ -62,6 +64,8 @@ resource "azurerm_firewall_application_rule_collection" "apprulecollection" {
   resource_group_name = data.azurerm_firewall.fw.resource_group_name
   priority            = data.external.rule_priorities.result.application_rule_priority
   action              = "Allow"
+
+  lifecycle { ignore_changes = [ tags ] }
 
   rule {
     name = "allowMLrelated"

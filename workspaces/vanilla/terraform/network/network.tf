@@ -14,6 +14,8 @@ resource "azurerm_subnet" "services" {
   # notice that private endpoints do not adhere to NSG rules
   enforce_private_link_endpoint_network_policies = true
   enforce_private_link_service_network_policies = true
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_subnet" "webapps" {
@@ -33,6 +35,8 @@ resource "azurerm_subnet" "webapps" {
       actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
     }
   }
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 data "azurerm_virtual_network" "core" {
@@ -45,6 +49,8 @@ resource "azurerm_virtual_network_peering" "ws-core-peer" {
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.ws.name
   remote_virtual_network_id = data.azurerm_virtual_network.core.id
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_virtual_network_peering" "core-ws-peer" {
@@ -52,6 +58,8 @@ resource "azurerm_virtual_network_peering" "core-ws-peer" {
   resource_group_name       = var.core_resource_group_name
   virtual_network_name      = var.core_vnet
   remote_virtual_network_id = azurerm_virtual_network.ws.id
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 data "azurerm_subnet" "shared" {
@@ -70,12 +78,16 @@ resource "azurerm_network_security_group" "ws" {
   location            = var.location
   name                = "nsg-ws"
   resource_group_name = var.resource_group_name
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 
 resource "azurerm_subnet_network_security_group_association" "services" {
   network_security_group_id = azurerm_network_security_group.ws.id
   subnet_id                 = azurerm_subnet.services.id
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_network_security_rule" "deny-outbound-override" {
@@ -90,6 +102,8 @@ resource "azurerm_network_security_rule" "deny-outbound-override" {
   resource_group_name         = var.resource_group_name
   source_address_prefix       = "*"
   source_port_range           = "*"
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_network_security_rule" "deny-all-inbound-override" {
@@ -104,6 +118,8 @@ resource "azurerm_network_security_rule" "deny-all-inbound-override" {
   resource_group_name         = var.resource_group_name
   source_address_prefix       = "*"
   source_port_range           = "*"
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_network_security_rule" "allow-inbound-within-services-subnet" {
@@ -118,6 +134,8 @@ resource "azurerm_network_security_rule" "allow-inbound-within-services-subnet" 
   protocol                    = "*"
   resource_group_name         = var.resource_group_name
   source_port_range           = "*"
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_network_security_rule" "allow-outbound-within-services-subnet" {
@@ -132,6 +150,8 @@ resource "azurerm_network_security_rule" "allow-outbound-within-services-subnet"
   protocol                    = "*"
   resource_group_name         = var.resource_group_name
   source_port_range           = "*"
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_network_security_rule" "allow-outbound-to-shared-services" {
@@ -146,6 +166,8 @@ resource "azurerm_network_security_rule" "allow-outbound-to-shared-services" {
   resource_group_name         = var.resource_group_name
   source_address_prefix       = "*"
   source_port_range           = "*"
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 
@@ -161,6 +183,8 @@ resource "azurerm_network_security_rule" "allow-outbound-to-internet" {
   resource_group_name         = var.resource_group_name
   source_address_prefix       = "*"
   source_port_range           = "*"
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 
@@ -181,6 +205,8 @@ resource "azurerm_network_security_rule" "allow-inbound-from-bastion" {
     data.azurerm_subnet.bastion.address_prefix
   ]
   source_port_range = "*"
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 data "azurerm_route_table" "rt" {
@@ -191,6 +217,8 @@ data "azurerm_route_table" "rt" {
 resource "azurerm_subnet_route_table_association" "rt_services_subnet_association" {
   route_table_id = data.azurerm_route_table.rt.id
   subnet_id      = azurerm_subnet.services.id
+
+  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "azurewebsites" {
@@ -199,4 +227,6 @@ resource "azurerm_private_dns_zone_virtual_network_link" "azurewebsites" {
   private_dns_zone_name = "privatelink.azurewebsites.net"
   name                  = "link-azurewebsites-${local.workspace_resource_name_suffix}"
   registration_enabled  = false
+
+  lifecycle { ignore_changes = [ tags ] }
 }

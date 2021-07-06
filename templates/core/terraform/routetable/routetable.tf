@@ -17,6 +17,4 @@ resource "azurerm_route_table" "rt" {
 resource "azurerm_subnet_route_table_association" "rt_shared_subnet_association" {
   subnet_id      = var.shared_subnet
   route_table_id = azurerm_route_table.rt.id
-
-  lifecycle { ignore_changes = [ tags ] }
 }

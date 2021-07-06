@@ -53,6 +53,4 @@ resource "azurerm_monitor_diagnostic_setting" "firewall" {
       enabled = false
     }
   }
-
-  lifecycle { ignore_changes = [ tags ] }
 }

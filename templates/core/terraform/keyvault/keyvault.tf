@@ -40,8 +40,6 @@ resource "azurerm_key_vault_access_policy" "managed_identity" {
   key_permissions = [ "Get", "List", ]
   secret_permissions = [ "Get", "List", ]
   certificate_permissions = [ "Get", "List", ]
-
-  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_private_dns_zone" "vaultcore" {

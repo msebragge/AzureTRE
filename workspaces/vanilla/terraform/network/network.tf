@@ -78,8 +78,6 @@ resource "azurerm_network_security_group" "ws" {
 resource "azurerm_subnet_network_security_group_association" "services" {
   network_security_group_id = azurerm_network_security_group.ws.id
   subnet_id                 = azurerm_subnet.services.id
-
-  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_network_security_rule" "deny-outbound-override" {
@@ -122,8 +120,6 @@ resource "azurerm_network_security_rule" "allow-inbound-within-services-subnet" 
   protocol                    = "*"
   resource_group_name         = var.resource_group_name
   source_port_range           = "*"
-
-  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_network_security_rule" "allow-outbound-within-services-subnet" {
@@ -138,8 +134,6 @@ resource "azurerm_network_security_rule" "allow-outbound-within-services-subnet"
   protocol                    = "*"
   resource_group_name         = var.resource_group_name
   source_port_range           = "*"
-
-  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_network_security_rule" "allow-outbound-to-shared-services" {
@@ -169,8 +163,6 @@ resource "azurerm_network_security_rule" "allow-outbound-to-internet" {
   resource_group_name         = var.resource_group_name
   source_address_prefix       = "*"
   source_port_range           = "*"
-
-  lifecycle { ignore_changes = [ tags ] }
 }
 
 
@@ -191,8 +183,6 @@ resource "azurerm_network_security_rule" "allow-inbound-from-bastion" {
     data.azurerm_subnet.bastion.address_prefix
   ]
   source_port_range = "*"
-
-  lifecycle { ignore_changes = [ tags ] }
 }
 
 data "azurerm_route_table" "rt" {
@@ -203,8 +193,6 @@ data "azurerm_route_table" "rt" {
 resource "azurerm_subnet_route_table_association" "rt_services_subnet_association" {
   route_table_id = data.azurerm_route_table.rt.id
   subnet_id      = azurerm_subnet.services.id
-
-  lifecycle { ignore_changes = [ tags ] }
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "azurewebsites" {

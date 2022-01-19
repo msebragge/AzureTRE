@@ -46,11 +46,16 @@ async def check_deployment(client, workspace_id, headers) -> (str, str):
     response = await client.get(
         f"https://{config.TRE_ID}.{config.RESOURCE_LOCATION}.cloudapp.azure.com{strings.API_WORKSPACES}/{workspace_id}",
         headers=headers)
+    console.log("HELLOU")
+    console.log(response.status_code)
     if response.status_code == 200:
         deployment_status = response.json()["workspace"]["deployment"]["status"]
         message = response.json()["workspace"]["deployment"]["message"]
         return deployment_status, message
     elif response.status_code == 404:
+        # Seems like the resource got deleted
+        return strings.RESOURCE_STATUS_DELETED, "Workspace was deleted"
+    elif:
         # Seems like the resource got deleted
         return strings.RESOURCE_STATUS_DELETED, "Workspace was deleted"
 

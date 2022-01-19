@@ -55,7 +55,7 @@ async def check_deployment(client, workspace_id, headers) -> (str, str):
     elif response.status_code == 404:
         # Seems like the resource got deleted
         return strings.RESOURCE_STATUS_DELETED, "Workspace was deleted"
-    elif:
+    else:
         # Seems like the resource got deleted
         return strings.RESOURCE_STATUS_DELETED, "Workspace was deleted"
 
